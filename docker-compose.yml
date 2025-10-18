@@ -4,8 +4,8 @@ services:
   wikipedia-app:
     build: .
     ports:
-      - "0.0.0.0:5000:5000"
-      - "0.0.0.0:8000:8000"
+      - "0.0.0.0:5000:5000"  # Flask app
+      - "0.0.0.0:8000:8000"  # Metrics endpoint
     networks:
       - monitoring
 
