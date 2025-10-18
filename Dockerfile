@@ -13,8 +13,8 @@ RUN pip install --no-cache-dir -r requirements.txt
 # Copy the rest of the code
 COPY . .
 
-# Expose Flask default port
-EXPOSE 5000
+# Expose both Flask app port and metrics port
+EXPOSE 5000 8000
 
 # Run the application
 CMD ["python", "app.py"]
