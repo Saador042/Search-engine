@@ -1,0 +1,41 @@
+version: '3.8'
+
+services:
+  wikipedia-app:
+    build: .
+    ports:
+      - "0.0.0.0:5000:5000"
+      - "0.0.0.0:8000:8000"
+    networks:
+      - monitoring
+
+  prometheus:
+    image: prom/prometheus:latest
+    ports:
+      - "0.0.0.0:9090:9090"
+    volumes:
+      - prometheus-storage:/prometheus
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+    networks:
+      - monitoring
+
+  grafana:
+    image: grafana/grafana-oss:latest
+    ports:
+      - "0.0.0.0:3000:3000"
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+    volumes:
+      - grafana-storage:/var/lib/grafana
+    networks:
+      - monitoring
+
+networks:
+  monitoring:
+    driver: bridge
+
+volumes:
+  prometheus-storage:
+  grafana-storage:
