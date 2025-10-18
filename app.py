@@ -4,7 +4,6 @@ from flask import *
 from flask import request, render_template
 from prometheus_client import generate_latest, Counter, Histogram, Gauge, REGISTRY
 import time
-import threading
 
 app = Flask(__name__, static_folder="ico", template_folder=os.getcwd())
 
@@ -26,7 +25,7 @@ def after_request(response):
     ACTIVE_REQUESTS.dec()
     duration = time.time() - request.start_time
     REQUEST_DURATION.labels(endpoint=request.endpoint).observe(duration)
-    REQUEST_COUNT.labels(method=request.method, endpoint=request.endpoint, status_code=response.status_code)
+    REQUEST_COUNT.labels(method=request.method, endpoint=request.endpoint, status_code=response.status_code).inc()
     return response
 
 @app.route("/", methods=["POST", "GET"])
@@ -65,4 +64,4 @@ if "__main__" == __name__:
     start_http_server(8000)
     
     # Start Flask app on all interfaces
-    app.run(host='0.0.0.0', port=5000)
+    app.run(host='0.0.0.0', port=5000, debug=False)
